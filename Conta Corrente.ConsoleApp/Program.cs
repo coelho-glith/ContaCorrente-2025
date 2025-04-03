@@ -16,6 +16,8 @@
 
             conta1.Sacar(200);
 
+            conta1.ExibirExtrato();
+
             ContaCorrente conta2 = new ContaCorrente(3, 300, 3000);
 
             conta1.transacoes = new List<string>();
