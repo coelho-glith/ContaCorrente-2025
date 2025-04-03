@@ -24,13 +24,9 @@
 
             conta1.ExibirExtrato();
 
-            conta1.MostrarSaldoFinal();
-
             Console.WriteLine();
 
             conta2.ExibirExtrato();
-
-            conta2.MostrarSaldoFinal();
         }
     }
 }

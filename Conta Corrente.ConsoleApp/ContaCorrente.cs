@@ -23,7 +23,7 @@
             Console.WriteLine($"Conta {Numero} criada. Saldo inicial: R${Saldo:F2}, Limite disponível: R${Limite:F2}\n");
         }
 
-        public bool Sacar(double valor)
+        public bool Sacar(double valor, bool exibirMensagem = true)
         {
             if (valor <= 0)
             {
@@ -37,23 +37,23 @@
                 return false;
             }
             Saldo -= valor;
-            transacoes.Add($"Saque: -R${valor:F2}\n");
-            Console.WriteLine($"Saque de R${valor:F2} realizado com sucesso\n");
+            transacoes.Add($"Saque: -R${valor:F2}");
+            if (exibirMensagem)
+                Console.WriteLine($"Saque de R${valor:F2} realizado com sucesso\n");
+
             return true;
         }
 
-        public void Depositar(double valor)
+        public void Depositar(double valor, bool exibirMensagem = true)
         {
             if (valor <= 0)
             {
                 Console.WriteLine("Valor inválido para depósito.\n");
             }
-            else
-            {
                 Saldo += valor;
-                transacoes.Add($"Depósito: +R${valor:F2}\n");
+                transacoes.Add($"Depósito: +R${valor:F2}");
+            if (exibirMensagem)
                 Console.WriteLine($"Depósito de R${valor:F2} realizado com sucesso\n");
-            }
         }
 
         public bool TransferirPara(ContaCorrente destino, double valor)
@@ -64,35 +64,41 @@
                 return false;
             }
 
-            if (Sacar(valor))
+            if (Saldo - valor < -Limite)
             {
-                destino.Depositar(valor);
-                transacoes.Add($"Transferência enviada: -R${valor:F2} para conta {destino.Numero}\n");
-                destino.transacoes.Add($"Transferência recebida: +R${valor:F2} de conta {Numero}\n");
-                Console.WriteLine($"Transferência de R${valor:F2} para conta {destino.Numero} realizada com sucesso\n");
-                return true;
+                Console.WriteLine("Saldo insuficiente para transferência.\n");
+                return false;
             }
-            return false;
+
+            Sacar(valor, false);
+            destino.Depositar(valor, false);
+            transacoes.Add($"Transferência enviada: R${valor:F2} para conta {destino.Numero}");
+            destino.transacoes.Add($"Transferência recebida: +R${valor:F2} de conta {Numero}");
+
+            Console.WriteLine($"Transferência de R${valor:F2} para conta {destino.Numero} realizada com sucesso\n");
+            return true;
         }
 
         public void ExibirExtrato()
         {
             Console.WriteLine($"\nExtrato da conta {Numero}:");
-            foreach (var item in transacoes)
+            if (transacoes.Count == 0)
             {
-                Console.WriteLine(item);
+                Console.WriteLine("Nenhuma transação realizada.");
             }
-            Console.WriteLine($"Saldo atual: R${Saldo:F2}\n");
+            else
+            {
+                foreach (var item in transacoes)
+                {
+                    Console.WriteLine(item);
+                }
+                Console.WriteLine($"Saldo atual: R${Saldo:F2}\n");
+            }
         }
 
         public void MostrarSaldo()
         {
             Console.WriteLine($"Saldo da conta {Numero}: R${Saldo:F2}\n");
-        }
-
-        public void MostrarSaldoFinal()
-        {
-            Console.WriteLine($"Saldo final da conta {Numero}: R${Saldo:F2}");
         }
     }
 }
