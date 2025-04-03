@@ -8,11 +8,11 @@
 
             conta1.transacoes = new List<string>();
 
-            conta1.Sacar(200);
-
-            conta1.Depositar(300);
+            conta1.Depositar(400);
 
             conta1.Depositar(500);
+
+            conta1.Sacar(200);
 
             conta1.Sacar(200);
 
